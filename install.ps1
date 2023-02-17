@@ -28,7 +28,6 @@ TO DO:
 New-Item -ItemType Directory -Force -Path C:\Support
 New-Item -ItemType Directory -Force -Path C:\Support\Scripts
 New-Item -ItemType Directory -Force -Path C:\Support\Logs
-New-Item -ItemType Directory -Force -Path C:\Support\Atera
 
 # Start a transcript session for debug logging
 Start-Transcript -Append C:\Support\Logs\PSScriptLog.txt
