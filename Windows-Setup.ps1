@@ -108,6 +108,10 @@ Set-TimeZone -Id "W. Europe Standard Time"
 Write-Host -ForegroundColor Green "Enable .NET Framework"
 Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All
 
+#Disable Fast Startup
+Write-Host -ForegroundColor Green "Disable Fast Startup"
+Set-Itemproperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power' -Name 'HiberbootEnabled' -value '0'
+
 #Disable LLMNR
 Write-Host -ForegroundColor Green "Disabling LLMNR"
 REG ADD  “HKLM\Software\policies\Microsoft\Windows NT\DNSClient”
