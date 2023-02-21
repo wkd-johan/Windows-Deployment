@@ -37,6 +37,8 @@ Rename-Computer -NewName $compName
 
 Install-Language sv-SE -CopyToSettings
 
+Start-Process msiexec.exe -Wait -ArgumentList '/I D:\setup_provisionering_silent.msi /quiet'
+
 #initiates the variables required for the script
 $diskProps = (Get-PhysicalDisk | where size -gt 100gb)
 $cortanaPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
