@@ -31,28 +31,11 @@ while ($confirmInfo -ne 'y') {
 	$confirmInfo = (Read-Host "Is this information correct Y/N")
 	}
 
-#Set admin password
-do {
-Write-Host "`nEnter Admin password"
-    $pwd1 = Read-Host "Password" -AsSecureString
-    $pwd2 = Read-Host "Confirm Password" -AsSecureString
-    $pwd1_text = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($pwd1))
-    $pwd2_text = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($pwd2))
-    
-    if ($pwd1_text -ne $pwd2_text) {
-    Write-Warning "`nPasswords do not match. Please try again."
-    }
-}
-while ($pwd1_text -ne $pwd2_text)
-
-Write-Host "`n`nPasswords matched"
-$userPass = $pwd1
-$pwd1_text = 'a'
-$pwd2_text = 'a'
-
 #set new PC name
 Write-Host -ForegroundColor Green "`n`nSetting Computer name..."
 Rename-Computer -NewName $compName
+
+Install-Language sv-SE -CopyToSettings
 
 #initiates the variables required for the script
 $diskProps = (Get-PhysicalDisk | where size -gt 100gb)
@@ -109,7 +92,7 @@ Write-Host -ForegroundColor Green "Enable .NET Framework"
 Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All
 
 #Disable Fast Startup
-Write-Host -ForegroundColor Green "Disable Fast Startup"
+Write-Host -ForegroundColor Green "Disabling Fast Startup"
 Set-Itemproperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power' -Name 'HiberbootEnabled' -value '0'
 
 #Disable LLMNR
@@ -132,37 +115,7 @@ $Parameters = @{
 }
 Set-SmbServerConfiguration @Parameters
 
-#Set Group Policy options
-Write-Host -ForegroundColor Green "Setting Password Policy:"
-Write-Host -ForegroundColor Green "Password History:10 `nMaximum Password Age:Unlimited `nMinimum Password Age:0 `nMinimum Password Length: 12 `nMust Meet Complexity Requirements"
-##Enforce password history
-net accounts /uniquepw:10
-##Set maximum password age
-net accounts /maxpwage:unlimited
-## Set minimum password age 0
-net accounts /minpwage:0
-#Set minimum password length 12
-net accounts /minpwlen: 12
-##Set must meet complexity requirements
-<# This part is a bit weird. It does the following:
-Exports the GPO config to root of C:
-Edits one line to enable Password Complexity
-Imports itself into GPO
-Deletes the exported file
-#>
-secedit /export /cfg c:\secpol.cfg
-(GC C:\secpol.cfg) -Replace "PasswordComplexity = 0","PasswordComplexity = 1" | Out-File C:\secpol.cfg
-secedit /configure /db c:\windows\security\local.sdb /cfg c:\secpol.cfg /areas SECURITYPOLICY
-Remove-Item C:\secpol.cfg -Force
 
-
-
-
-#Create Local User
-$UserName = Read-Host "Please set the user's name"
-$Password = Read-Host "Please set the password for User" -AsSecureString
-New-LocalUser -Name $UserName -Password $Password -PasswordNeverExpires
-Add-LocalGroupMember -Group "Administrators" -Member $UserName
 
 ##########Essential Tweaks##########
 
