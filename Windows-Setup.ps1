@@ -35,7 +35,29 @@ while ($confirmInfo -ne 'y') {
 Write-Host -ForegroundColor Green "`n`nSetting Computer name..."
 Rename-Computer -NewName $compName
 
-Install-Language sv-SE -CopyToSettings
+# Check if English (US) language pack is installed
+if ((Get-Culture).Name -eq 'en-US') {
+    # Uninstall English (US) language pack
+    Get-WindowsPackage -Name Microsoft-Windows-Client-LanguagePack-Package~31bf3856ad364e35~amd64~en-US~10.0.19041.1 | Remove-WindowsPackage -NoRestart
+}
+
+# Install Swedish language pack
+Add-WindowsCapability -Online -Name Language.Basic~sv-SE~0.0.1.0
+
+# Set Swedish language for all users
+Set-WinUserLanguageList -LanguageList 'sv-SE' -Force
+
+# Set Swedish as the system default language
+Set-WinSystemLocale -SystemLocale 'sv-SE' -Force
+
+# Set Swedish as the default input language for all users
+Set-WinDefaultInputMethodOverride -InputMethodLocale 'sv-SE' -LanguageList 'sv-SE' -Force
+
+# Set Swedish keyboard layout for all users
+New-ItemProperty -Path "HKU:\.DEFAULT\Keyboard Layout\Preload" -PropertyType "ExpandString" -Name "1" -Value "0000041D" -Force
+
+# Set Swedish user interface elements for all users
+Set-WinUILanguageOverride -Language 'sv-SE' -Force
 
 Start-Process msiexec.exe -Wait -ArgumentList '/I D:\setup_provisionering_silent.msi /quiet'
 
