@@ -129,6 +129,29 @@ Write-Host -ForegroundColor Green "Disabling NBT-NS"
 $regkey = "HKLM:SYSTEM\CurrentControlSet\services\NetBT\Parameters\Interfaces"
 Get-ChildItem $regkey |foreach { Set-ItemProperty -Path "$regkey\$($_.pschildname)" -Name NetbiosOptions -Value 2 -Verbose}
 
+# Prompt for Domain Administrator credentials
+$domainName = Read-Host "Enter the domain name to join"
+$domainCredential = Get-Credential -Message "Enter Domain Administrator Credentials for $domainName"
+
+# Create script to join the computer to the domain
+$scriptPath = Join-Path $env:PUBLIC\Desktop "JoinToDomain.ps1"
+@"
+`$domainCredential = Get-Credential -Message "Enter Domain Administrator Credentials for $domainName"
+Add-Computer -DomainName "$domainName" -Credential `$domainCredential -Restart
+"@ | Set-Content -Path $scriptPath
+
+# Create shortcut to script on the Public Desktop
+$shortcutPath = Join-Path $env:PUBLIC\Desktop "Join to Domain.lnk"
+$WshShell = New-Object -ComObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut($shortcutPath)
+$Shortcut.TargetPath = "powershell.exe"
+$Shortcut.Arguments = "-ExecutionPolicy Bypass -NoProfile -File `"$scriptPath`""
+$Shortcut.Save()
+
+# Notify user that script is ready to run
+Write-Host "Join to Domain script has been created on the Public Desktop at $shortcutPath."
+Write-Host "To join this computer to the $domainName domain, run the Join to Domain script."
+
 Write-Host -ForegroundColor Green "Enabling SMB signing as always"
 #Enable SMB signing as 'always'
 $Parameters = @{
