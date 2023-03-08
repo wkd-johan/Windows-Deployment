@@ -42,22 +42,22 @@ if ((Get-Culture).Name -eq 'en-US') {
 }
 
 # Install Swedish language pack
-Add-WindowsCapability -Online -Name Language.Basic~sv-SE~0.0.1.0
+# Add-WindowsCapability -Online -Name Language.Basic~sv-SE~0.0.1.0
 
 # Set Swedish language for all users
-Set-WinUserLanguageList -LanguageList 'sv-SE' -Force
+# Set-WinUserLanguageList -LanguageList 'sv-SE' -Force
 
 # Set Swedish as the system default language
-Set-WinSystemLocale -SystemLocale 'sv-SE' -Force
+# Set-WinSystemLocale -SystemLocale 'sv-SE' -Force
 
 # Set Swedish as the default input language for all users
-Set-WinDefaultInputMethodOverride -InputMethodLocale 'sv-SE' -LanguageList 'sv-SE' -Force
+# Set-WinDefaultInputMethodOverride -InputMethodLocale 'sv-SE' -LanguageList 'sv-SE' -Force
 
 # Set Swedish keyboard layout for all users
-New-ItemProperty -Path "HKU:\.DEFAULT\Keyboard Layout\Preload" -PropertyType "ExpandString" -Name "1" -Value "0000041D" -Force
+# New-ItemProperty -Path "HKU:\.DEFAULT\Keyboard Layout\Preload" -PropertyType "ExpandString" -Name "1" -Value "0000041D" -Force
 
 # Set Swedish user interface elements for all users
-Set-WinUILanguageOverride -Language 'sv-SE' -Force
+# Set-WinUILanguageOverride -Language 'sv-SE' -Force
 
 Start-Process msiexec.exe -Wait -ArgumentList '/I D:\setup_provisionering_silent.msi /quiet'
 
@@ -129,17 +129,6 @@ Write-Host -ForegroundColor Green "Disabling NBT-NS"
 $regkey = "HKLM:SYSTEM\CurrentControlSet\services\NetBT\Parameters\Interfaces"
 Get-ChildItem $regkey |foreach { Set-ItemProperty -Path "$regkey\$($_.pschildname)" -Name NetbiosOptions -Value 2 -Verbose}
 
-# Prompt user to join domain
-$joinDomain = Read-Host "Do you want to join this computer to the domain? (y/n)"
-
-if ($joinDomain.ToLower() -eq "y") {
-    # Prompt user for domain and domain admin credentials
-    $domain = Read-Host "Enter the domain name"
-    $domainCred = Get-Credential -Message "Enter the domain admin credentials"
-
-    # Join computer to domain
-    Add-Computer -DomainName $domain -Credential $domainCred
-}
 
 Write-Host -ForegroundColor Green "Enabling SMB signing as always"
 #Enable SMB signing as 'always'
