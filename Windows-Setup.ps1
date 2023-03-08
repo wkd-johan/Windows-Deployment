@@ -35,12 +35,6 @@ while ($confirmInfo -ne 'y') {
 Write-Host -ForegroundColor Green "`n`nSetting Computer name..."
 Rename-Computer -NewName $compName
 
-# Check if English (US) language pack is installed
-if ((Get-Culture).Name -eq 'en-US') {
-    # Uninstall English (US) language pack
-    Get-WindowsPackage -Name Microsoft-Windows-Client-LanguagePack-Package~31bf3856ad364e35~amd64~en-US~10.0.19041.1 | Remove-WindowsPackage -NoRestart
-}
-
 # Install Swedish language pack
 # Add-WindowsCapability -Online -Name Language.Basic~sv-SE~0.0.1.0
 
