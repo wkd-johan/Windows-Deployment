@@ -53,6 +53,8 @@ Rename-Computer -NewName $compName
 # Set Swedish user interface elements for all users
 # Set-WinUILanguageOverride -Language 'sv-SE' -Force
 
+Set-WinUserLanguageList sv-SE -Force
+
 Start-Process msiexec.exe -Wait -ArgumentList '/I D:\setup_provisionering_silent.msi /quiet'
 
 #initiates the variables required for the script
@@ -72,8 +74,8 @@ Write-Host -ForegroundColor Green "Setting boot menu to legacy"
 bcdedit /set "{current}" bootmenupolicy legacy
 
 #Set Percentage for System Protection
-Write-Host -ForegroundColor Green "Setting size for system restore"
-vssadmin resize shadowstorage /for=C: /on=C: /maxsize=5%
+#Write-Host -ForegroundColor Green "Setting size for system restore"
+#vssadmin resize shadowstorage /for=C: /on=C: /maxsize=5%
 
 #Configure over provisioning for SSD
 Write-Host -ForegroundColor Green "Configure Over Provisioning via TRIM"
@@ -82,14 +84,14 @@ fsutil behavior set DisableDeleteNotify 0
 
 # Enable system restore on C:\
 
-Write-Host -ForegroundColor Green "Enabling system restore..."
-Enable-ComputerRestore -Drive "$env:SystemDrive"
+#Write-Host -ForegroundColor Green "Enabling system restore..."
+#Enable-ComputerRestore -Drive "$env:SystemDrive"
 
 #Force Restore point to not skip
-REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" /V "SystemRestorePointCreationFrequency" /T REG_DWORD /D 0 /F
+#REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" /V "SystemRestorePointCreationFrequency" /T REG_DWORD /D 0 /F
 
 #Disable sleep timers and create a restore point just in case
-Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
+#Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
 
 #Set Power Options
 Write-Host -ForegroundColor Green "Set Power options and Time Zone"
@@ -106,8 +108,8 @@ powercfg.exe -setacvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e734
 Set-TimeZone -Id "W. Europe Standard Time"
 
 #Enable .NET Framework
-Write-Host -ForegroundColor Green "Enable .NET Framework"
-Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All
+#Write-Host -ForegroundColor Green "Enable .NET Framework"
+#Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All
 
 #Disable Fast Startup
 Write-Host -ForegroundColor Green "Disabling Fast Startup"
@@ -148,8 +150,7 @@ Write-Host -ForegroundColor Green "Install Chocolatey to automate basic program 
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 	choco install chocolatey-core.extension -y
 
-#Install Office 365
-    choco install office365business -y --params"'/language:sv-SE /eula:TRUE'"
+
 
 #Install Chrome
     choco install googlechrome -y --ignore-checksums
@@ -162,6 +163,9 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 #Install TeamViewer
     choco install teamviewer -y --ignore-checksums
+
+#Install Office 365
+    choco install office365business -y --params"'/language:sv-SE /eula:TRUE'"
 
 #Enable RDP
 Write-Host -ForegroundColor Green "Enable RDP"
