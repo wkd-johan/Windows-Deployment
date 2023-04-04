@@ -39,19 +39,19 @@ Rename-Computer -NewName $compName
 # Add-WindowsCapability -Online -Name Language.Basic~sv-SE~0.0.1.0
 
 # Set Swedish language for all users
-# Set-WinUserLanguageList -LanguageList 'sv-SE' -Force
+Set-WinUserLanguageList -LanguageList 'sv-SE' -Force
 
 # Set Swedish as the system default language
-# Set-WinSystemLocale -SystemLocale 'sv-SE' -Force
+Set-WinSystemLocale -SystemLocale 'sv-SE' -Force
 
 # Set Swedish as the default input language for all users
-# Set-WinDefaultInputMethodOverride -InputMethodLocale 'sv-SE' -LanguageList 'sv-SE' -Force
+Set-WinDefaultInputMethodOverride -InputMethodLocale 'sv-SE' -LanguageList 'sv-SE' -Force
 
 # Set Swedish keyboard layout for all users
-# New-ItemProperty -Path "HKU:\.DEFAULT\Keyboard Layout\Preload" -PropertyType "ExpandString" -Name "1" -Value "0000041D" -Force
+New-ItemProperty -Path "HKU:\.DEFAULT\Keyboard Layout\Preload" -PropertyType "ExpandString" -Name "1" -Value "0000041D" -Force
 
 # Set Swedish user interface elements for all users
-# Set-WinUILanguageOverride -Language 'sv-SE' -Force
+Set-WinUILanguageOverride -Language 'sv-SE' -Force
 
 Set-WinUserLanguageList sv-SE -Force
 
@@ -324,9 +324,6 @@ Start-Sleep 15
     # Group svchost.exe processes
     $ram = (Get-CimInstance -ClassName Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum / 1kb
     Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control" -Name "SvcHostSplitThresholdInKB" -Type DWord -Value $ram -Force
-
-    Write-Host  -ForegroundColor Green "Installing Windows Media Player..."
-	Enable-WindowsOptionalFeature -Online -FeatureName "WindowsMediaPlayer" -NoRestart -WarningAction SilentlyContinue | Out-Null
 
     Write-Host  -ForegroundColor Green "Disable News and Interests"
     $ResultText.text += "`r`n" +"Disabling Extra Junk"
