@@ -42,7 +42,7 @@ Rename-Computer -NewName $compName
 Set-WinUserLanguageList -LanguageList 'sv-SE' -Force
 
 # Set Swedish as the system default language
-Set-WinSystemLocale -SystemLocale 'sv-SE' -Force
+Set-WinSystemLocale sv-SE
 
 # Set Swedish as the default input language for all users
 Set-WinDefaultInputMethodOverride -InputMethodLocale 'sv-SE' -LanguageList 'sv-SE' -Force
@@ -55,7 +55,18 @@ Set-WinUILanguageOverride -Language 'sv-SE' -Force
 
 Set-WinUserLanguageList sv-SE -Force
 
+Set-LocalUser -Name "supervisor" -PasswordNeverExpires 1
+
+$OfficeUninstallStrings = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where {$_.DisplayName -like "*Office*" "*365*" "*OneNote*" "*McAfee*"} | Select UninstallString).UninstallString
+    ForEach ($UninstallString in $OfficeUninstallStrings) {
+        $UninstallEXE = ($UninstallString -split '"')[1]
+        $UninstallArg = ($UninstallString -split '"')[2] + " DisplayLevel=False"
+        Start-Process -FilePath $UninstallEXE -ArgumentList $UninstallArg -Wait
+    }
+
+
 Start-Process msiexec.exe -Wait -ArgumentList '/I D:\setup_provisionering_silent.msi /quiet'
+Start-Process msiexec.exe -Wait -ArgumentList '/I E:\setup_provisionering_silent.msi /quiet'
 
 #initiates the variables required for the script
 $diskProps = (Get-PhysicalDisk | where size -gt 100gb)
