@@ -57,7 +57,7 @@ Set-WinUserLanguageList sv-SE -Force
 
 Set-LocalUser -Name "supervisor" -PasswordNeverExpires 1
 
-$OfficeUninstallStrings = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where {$_.DisplayName -like "*Office*" "*365*" "*OneNote*" "*McAfee*"} | Select UninstallString).UninstallString
+$OfficeUninstallStrings = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where {$_.DisplayName -like "*Office*"} | Select UninstallString).UninstallString
     ForEach ($UninstallString in $OfficeUninstallStrings) {
         $UninstallEXE = ($UninstallString -split '"')[1]
         $UninstallArg = ($UninstallString -split '"')[2] + " DisplayLevel=False"
