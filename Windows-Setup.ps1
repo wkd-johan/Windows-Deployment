@@ -38,6 +38,8 @@ Rename-Computer -NewName $compName
 # Install Swedish language pack
 # Add-WindowsCapability -Online -Name Language.Basic~sv-SE~0.0.1.0
 
+wmic useraccount where "Name='supervisor'" set PasswordExpires=false
+
 # Set Swedish language for all users
 Set-WinUserLanguageList -LanguageList 'sv-SE' -Force
 
