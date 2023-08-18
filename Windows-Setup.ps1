@@ -912,6 +912,9 @@ Write-Output "Finished full bloatware removal."
     Write-Host  -ForegroundColor Green "Adjusted visual effects for performance"
     $ResultText.text = "`r`n" +"`r`n" + "Adjusted VFX for performance"
 
+reg add HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone /v Value /d Allow /f
+reg add  “HKLM\Software\Policies\Microsoft\Windows\AppPrivacy” /v ”LetAppsAccessCamera” /t REG_DWORD /d “1” /f
+
 Write-Host  -ForegroundColor Green "Showing tray icons..."
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" -Name "EnableAutoTray" -Type DWord -Value 0
 	Write-Host  -ForegroundColor Green "Done - Now showing all tray icons"
