@@ -70,6 +70,8 @@ $OfficeUninstallStrings = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\Cur
 Start-Process msiexec.exe -Wait -ArgumentList '/I D:\setup_provisionering_silent.msi /quiet'
 Start-Process msiexec.exe -Wait -ArgumentList '/I E:\setup_provisionering_silent.msi /quiet'
 
+REG ADD  "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services\Client" /v "fClientDisableUDP" /t REG_DWORD /d "1" /f
+
 #initiates the variables required for the script
 $diskProps = (Get-PhysicalDisk | where size -gt 100gb)
 $cortanaPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
