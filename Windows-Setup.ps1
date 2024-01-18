@@ -72,6 +72,9 @@ Start-Process msiexec.exe -Wait -ArgumentList '/I E:\setup_provisionering_silent
 
 REG ADD  "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services\Client" /v "fClientDisableUDP" /t REG_DWORD /d "1" /f
 
+REG ADD  "HKLM\Software\Microsoft\Cryptography\Protect\Providers\df9d8cd0-1501-11d1-8c7a-00c04fc297eb" /v "ProtectionPolicy" /t REG_DWORD /d "1" /f
+
+
 #initiates the variables required for the script
 $diskProps = (Get-PhysicalDisk | where size -gt 100gb)
 $cortanaPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
