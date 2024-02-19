@@ -916,6 +916,9 @@ Write-Host  -ForegroundColor Green "Showing tray icons..."
 	Write-Host  -ForegroundColor Green "Done - Now showing all tray icons"
     $ResultText.text = "`r`n" +"`r`n" + "Tray Icons now set to show all"
 
+Start-Process msiexec.exe -Wait -ArgumentList '/I D:\DellCommandUpdateApp.msi /quiet'
+Start-Process msiexec.exe -Wait -ArgumentList '/I E:\DellCommandUpdateApp.msi /quiet'
+
 
 #Close debugging log Transcript
 Stop-Transcript
