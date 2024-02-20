@@ -113,20 +113,6 @@ powercfg.exe -setacvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e734
 #Set Mountain Time Zone
 Set-TimeZone -Id "W. Europe Standard Time"
 
-#Enable .NET Framework
-#Write-Host -ForegroundColor Green "Enable .NET Framework"
-#Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All
-
-#Disable LLMNR
-Write-Host -ForegroundColor Green "Disabling LLMNR"
-REG ADD  “HKLM\Software\policies\Microsoft\Windows NT\DNSClient”
-REG ADD  “HKLM\Software\policies\Microsoft\Windows NT\DNSClient” /v ” EnableMulticast” /t REG_DWORD /d “0” /f
-
-#Disable NBT-NS
-Write-Host -ForegroundColor Green "Disabling NBT-NS"
-$regkey = "HKLM:SYSTEM\CurrentControlSet\services\NetBT\Parameters\Interfaces"
-Get-ChildItem $regkey |foreach { Set-ItemProperty -Path "$regkey\$($_.pschildname)" -Name NetbiosOptions -Value 2 -Verbose}
-
 
 Write-Host -ForegroundColor Green "Enabling SMB signing as always"
 #Enable SMB signing as 'always'
@@ -159,9 +145,6 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 #Install Adobe Reader
     choco install adobereader -y
-
-#Install 7-zip
-    choco install 7zip -y
 
 #Install Office 365
     choco install office365business -y --params"'/language:sv-SE /eula:TRUE'"
