@@ -23,18 +23,6 @@ Changes By Cole Bermudez"
 # Create a log file for debugging
 Start-Transcript -Append C:\Support\Logs\WindowsSetupLog.txt
 
-#Set the Computer name
-while ($confirmInfo -ne 'y') {
-	$compName = (Read-Host "Enter New Computer Name")
-
-	Write-Output "`n`nComputer Name: $compName`n"
-	$confirmInfo = (Read-Host "Is this information correct Y/N")
-	}
-
-#set new PC name
-Write-Host -ForegroundColor Green "`n`nSetting Computer name..."
-Rename-Computer -NewName $compName
-
 # Install Swedish language pack
 # Add-WindowsCapability -Online -Name Language.Basic~sv-SE~0.0.1.0
 
